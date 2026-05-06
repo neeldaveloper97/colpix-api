@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: colpix-api
+  jackson:
+    default-property-inclusion: non_null
+
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+
+colpix:
+  auth:
+    # Default token TTL. Parametrizable via env var COLPIX_AUTH_TOKEN_TTL=PT10M etc.
+    token-ttl: PT5M
+  backend:
+    base-url: https://api.restful-api.dev
+    connect-timeout: PT5S
+    read-timeout: PT15S
+  # Demo clients. The clientSecretHash is a BCrypt hash. Plain secrets shown
+  # below for the demo so reviewers can authenticate. In production these would
+  # be loaded from a secret store and never committed.
+  #
+  #   client_id        client_secret
+  #   acme             acme-secret
+  #   contoso          contoso-secret
+  clients:
+    - client-id: acme
+      client-secret-hash: "$2b$10$ryX58pI0D9migN4tAmPKPOtt0nfh8nKLbkN/PTCxcaO6cRCPWQB0m"
+      collection-id: col-acme
+    - client-id: contoso
+      client-secret-hash: "$2b$10$6TssAkToKHjvmQM.m1JxmupKDielAY5FDMvIkgHFhQvtHfC7cMGvm"
+      collection-id: col-contoso
+
+logging:
+  level:
+    root: INFO
+    com.colpix.api: INFO
+    org.springframework.web: INFO

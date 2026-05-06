@@ -1,0 +1,16 @@
+colpix:
+  auth:
+    token-ttl: PT5M
+  backend:
+    base-url: "http://localhost:0"   # overridden at runtime by WireMock port
+    connect-timeout: PT2S
+    read-timeout: PT5S
+  clients:
+    - client-id: acme
+      # bcrypt of 'acme-secret'
+      client-secret-hash: "$2b$10$ryX58pI0D9migN4tAmPKPOtt0nfh8nKLbkN/PTCxcaO6cRCPWQB0m"
+      collection-id: col-acme
+    - client-id: contoso
+      # bcrypt of 'contoso-secret'
+      client-secret-hash: "$2b$10$6TssAkToKHjvmQM.m1JxmupKDielAY5FDMvIkgHFhQvtHfC7cMGvm"
+      collection-id: col-contoso
