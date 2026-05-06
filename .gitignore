@@ -1,0 +1,41 @@
+# Maven
+target/
+.mvn/
+mvnw
+mvnw.cmd
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+.factorypath
+.netbeans/
+nbproject/private/
+nb-configuration.xml
+nbactions.xml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Local env
+.env
+*.env.local
+application-local.yml
+application-local.yaml
+application-local.properties
+
+# Build outputs
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+
+# Spring Boot devtools
+.spring-boot-devtools.properties
