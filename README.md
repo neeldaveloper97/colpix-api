@@ -122,7 +122,7 @@ All knobs live under `colpix.*` in `application.yml`:
 ```yaml
 colpix:
   auth:
-    token-ttl: PT5M           # ISO-8601 duration; override with COLPIX_AUTH_TOKEN_TTL
+    token-ttl: PT5M    
   backend:
     base-url: https://api.restful-api.dev
     connect-timeout: PT5S
@@ -133,7 +133,7 @@ colpix:
       collection-id: col-acme
 ```
 
-### Demo credentials (for the reviewer)
+### Demo credentials 
 
 | `client_id` | `client_secret`  | Collection      |
 |-------------|------------------|-----------------|
@@ -201,39 +201,3 @@ Import it into Postman, then:
    via collection-level Bearer auth.
 3. The **Token validation** folder demonstrates the 401 paths.
 
-## Design notes
-
-- **Why opaque tokens (not JWT)?** The challenge requires server-side expiry,
-  including the ability to revoke. Opaque tokens with a Caffeine-backed
-  store give us O(1) lookup and per-token expiry without any of JWT's
-  trade-offs (key rotation, offline replay, larger headers). JWTs would be
-  the right choice if we wanted stateless verification across many nodes,
-  but for the spec as stated this is simpler and stronger.
-- **Why a local collection store?** restful-api.dev has no concept of
-  collections — every object lives in one global namespace. To honour the
-  requirement that a `client_id` maps to one Collection resource we keep an
-  id-to-collection mapping locally and use it to scope reads, lists, and
-  updates. The `ProductCollectionStore` interface keeps that decision
-  isolated to one class — swapping in a relational table is a one-class
-  change.
-- **Why `GET /objects?id=...&id=...` for listing?** The unfiltered
-  `GET /objects` on restful-api.dev returns only the canonical 1-13
-  records, **not** user-created ones. Querying explicitly by id is the
-  documented bulk lookup and is also the most semantically correct
-  shape — listing should always return exactly the caller's collection.
-- **Why BCrypt for the secret?** Even in a demo configuration we should never
-  store plaintext secrets. BCrypt + constant-time comparison plus a dummy
-  hash on unknown-client paths keeps timing roughly equal between
-  authentication failure modes.
-- **Why a separate `ApiException` hierarchy?** Controllers stay free of
-  HTTP-specific error code branching; the global handler maps domain
-  exceptions to the wire envelope in one place. Adding a new error type is
-  one new class.
-- **Production gaps (intentional, called out)**: the token store and
-  collection store are in-memory. They are isolated behind interfaces so a
-  Redis / database implementation drops in cleanly. Rate limiting, refresh
-  tokens, and per-client metric tags would be the next reasonable additions.
-
-## License
-
-Apache 2.0
